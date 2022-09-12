@@ -2,9 +2,12 @@ import sqlite3
 from flask import Flask, render_template, request, g
 from pycoingecko import CoinGeckoAPI
 
+
 app = Flask(__name__)
 
 cg = CoinGeckoAPI()
+
+
 
 @app.route('/')
 def index():
@@ -38,8 +41,13 @@ def close_connection(exception):
 
 @app.route('/markets')
 def markets():
-    temp_dict = {}
-    with open("test.json") as file:
-        file = json.load(file)
-
-    return render_template("markets.html", file=file)
+    
+    data = cg.get_price(ids = "bitcoin, ethereum", vs_currencies = "usd")
+    coins = []
+    print(data["bitcoin"]["usd"])
+    for coin in data:
+                
+        coins.append({"name": coin, "usd": data[coin]["usd"]})
+    
+    print(coins)
+    return render_template("markets.html", data=data)

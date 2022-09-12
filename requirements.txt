@@ -1,3 +1,2 @@
 Flask
 pycoingecko
-flask_json
