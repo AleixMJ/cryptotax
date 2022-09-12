@@ -1,13 +1,16 @@
 import sqlite3
 from flask import Flask, render_template, request, g
+from pycoingecko import CoinGeckoAPI
 
 app = Flask(__name__)
+
+cg = CoinGeckoAPI()
 
 @app.route('/')
 def index():
 
     user = query_db('select * from users where id = ?',[1], one=True)
-
+    
     if user is None:
         print('No such user')
     else:
@@ -32,3 +35,11 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+@app.route('/markets')
+def markets():
+    temp_dict = {}
+    with open("test.json") as file:
+        file = json.load(file)
+
+    return render_template("markets.html", file=file)
