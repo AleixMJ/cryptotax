@@ -12,7 +12,7 @@ def index():
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect('cryptotax.db')
+        db = g._database = sqlite3.connect("/home/aleix/cryptotax/cryptotax.db")
         cursor = db.cursor()
         cursor.execute("SELECT * FROM users")
     return cursor.fetchall()
