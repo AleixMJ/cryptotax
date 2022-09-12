@@ -1,26 +1,29 @@
-from multiprocessing import connection
 import sqlite3
-from flask import Flask, render_template, request
-app = Flask(__name__)
+from flask import Flask, render_template, request, g
 
+app = Flask(__name__)
 
 @app.route('/')
 def index():
+    data = get_db()
+    return str(data)
 
 
-    return render_template("index.html")
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect('cryptotax.db')
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM users")
+    return cursor.fetchall()
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 
-@app.route('/test', methods = ["GET"])
-def test():
-    try:
-        if request.method == "GET":
-           connection = sqlite3.connect("crypto.db")
-           db = connection.cursor() 
-           result = db.execute("SELECT * FROM users WHERE id = ?", 1)
-           result = result.fetchall()[0][0]
-           return render_template("test.html", result = result)
-    except:
-        return render_template("test.html", result = "")
-
+if __name__ == "_main__":
+    app.run
     
