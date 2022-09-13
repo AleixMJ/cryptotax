@@ -1,7 +1,9 @@
 import sqlite3
 from flask import Flask, render_template, request, g
 from pycoingecko import CoinGeckoAPI
-
+import pandas as pd
+from IPython import display
+import mplfinance as mpf
 
 app = Flask(__name__)
 
@@ -44,10 +46,12 @@ def markets():
     
     data = cg.get_price(ids = "bitcoin, ethereum", vs_currencies = "usd")
     coins = []
-    print(data["bitcoin"]["usd"])
+    Panda = pd.DataFrame(data)
     for coin in data:
                 
         coins.append({"name": coin, "usd": data[coin]["usd"]})
     
-    print(coins)
-    return render_template("markets.html", coins=coins)
+    html = Panda.to_html()
+    text_file = open("markets.html", "w")
+    text_file.write(html)
+    return render_template("markets.html")
