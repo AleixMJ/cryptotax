@@ -5,17 +5,16 @@
 {% endblock %}
 
 {% block main %}
-<table>
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>Coin</th>
-            <th>Price</th>
-            <th>24h<th>
-            <th>30d<th>
-            <th>1y<th>
-            <th>Mkt Cap<th>
+            <th scope="col">Coin</th>
+            <th scope="col">Price</th>
+            <th scope="col">24h<th>
+            <th scope="col">30d<th>
+            <th scope="col">1y<th>
+            <th scope="col">Mkt Cap<th>
         </tr>
-
     </thead>
     <tbody>
         {% for coin in inverted %}
