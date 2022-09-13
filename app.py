@@ -50,4 +50,4 @@ def markets():
         coins.append({"name": coin, "usd": data[coin]["usd"]})
     
     print(coins)
-    return render_template("markets.html", data=data)
+    return render_template("markets.html", coins=coins)
