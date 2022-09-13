@@ -44,10 +44,24 @@ def close_connection(exception):
 @app.route('/markets')
 def markets():
     
-    data = cg.get_price(ids = "bitcoin, ethereum", vs_currencies = "usd")
-    
+      
     coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
     coins_df = pd.DataFrame(coins).head(100).round(2)
     inverted = coins_df.transpose()
 
     return render_template("markets.html", inverted = inverted)
+
+@app.route('/search')
+def search():
+    
+    historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days="max")
+    hist_df = pd.DataFrame(historical)
+    hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
+    hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
+    hist_df.set_index("Time", inplace=True)
+    print(hist_df.shape)
+    print(hist_df.head())
+    print(hist_df.info())
+    print(hist_df.describe())
+    print(mpf.plot(hist_df.tail(50)))
+    return render_template("search.html")
