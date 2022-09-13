@@ -53,13 +53,16 @@ def markets():
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
-       
-    historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days="max")
+
+    duration = "2"
+    coin = "ethereum"
+
+    historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days=7)
     hist_df = pd.DataFrame(historical)
     hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
     hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
     hist_df.set_index("Time", inplace=True)
-    mpf.plot(hist_df.tail(200), type="candle", style="charles", title="ethereum", mav=(20,50), savefig="templates/chart.png")
+    mpf.plot(hist_df.tail(200), type="candle", style="charles", title="ethereum", mav=(20,50), savefig="static/chart.png")
     
     return render_template("search.html")
 
