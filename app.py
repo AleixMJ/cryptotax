@@ -6,10 +6,11 @@ from IPython import display
 import mplfinance as mpf
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 cg = CoinGeckoAPI()
 
-
+ids = cg.get_coins_list(include_platform = "false")
 
 @app.route('/')
 def index():
@@ -54,17 +55,43 @@ def markets():
 @app.route('/search', methods=["GET", "POST"])
 def search():
 
-    duration = "2"
-    coin = "ethereum"
+    if request.method == "POST":
 
-    historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days=7)
-    hist_df = pd.DataFrame(historical)
-    hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
-    hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
-    hist_df.set_index("Time", inplace=True)
-    mpf.plot(hist_df.tail(200), type="candle", style="charles", title="ethereum", mav=(20,50), savefig="static/chart.png")
-    
-    return render_template("search.html")
+        duration = "max"
+        coin = request.form.get("coin")
+        historical = cg.get_coin_ohlc_by_id(id=coin, vs_currency="usd", days=duration)
+        hist_df = pd.DataFrame(historical)
+        hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
+        hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
+        hist_df.set_index("Time", inplace=True)
+        mpf.plot(hist_df.tail(200), type="candle", style="charles", title= coin.capitalize() + " Price Chart", mav=(20,50), savefig="static/chart.png")
+        
+        return render_template("search.html")
+    else:
+        duration = "max"
+        coin = "bitcoin"
+        historical = cg.get_coin_ohlc_by_id(id=coin, vs_currency="usd", days=duration)
+        hist_df = pd.DataFrame(historical)
+        hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
+        hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
+        hist_df.set_index("Time", inplace=True)
+        mpf.plot(hist_df.tail(200), type="candle", style="charles", title= coin.capitalize() + " Price Chart", mav=(20,50), savefig="static/chart.png")
+        
+        return render_template("search.html")
+
+
+
+
+
+
+# No caching at all for API endpoints.
+@app.after_request
+def add_header(response):
+    # response.cache_control.no_store = True
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
