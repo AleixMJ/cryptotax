@@ -5,28 +5,30 @@
 {% endblock %}
 
 {% block main %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">Coin</th>
-            <th scope="col">Price</th>
-            <th scope="col">24h<th>
-            <th scope="col">30d<th>
-            <th scope="col">1y<th>
-            <th scope="col">Mkt Cap<th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for coin in inverted %}
-        <tr>
-            <td>{{inverted[coin]["id"]}}</td>
-            <td>{{inverted[coin]["current_price"]}}</td>
-            <td>{{inverted[coin]["price_change_percentage_24h_in_currency"]}}</td>
-            <td>{{inverted[coin]["price_change_percentage_30d_in_currency"]}}</td>
-            <td>{{inverted[coin]["price_change_percentage_1y_in_currency"]}}</td>
-            <td>{{inverted[coin]["market_cap"]}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Coin</th>
+                <th scope="col">Price</th>
+                <th scope="col">24h</th>
+                <th scope="col">30d</th>
+                <th scope="col">1y</th>
+                <th scope="col">Mkt Cap</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coin in inverted %}
+            <tr>
+                <td >{{inverted[coin]["id"].capitalize()}} - {{inverted[coin]["symbol"].upper()}} </td>
+                <td>${{inverted[coin]["current_price"]}}</td>
+                <td>{{inverted[coin]["price_change_percentage_24h_in_currency"]}}%</td>
+                <td>{{inverted[coin]["price_change_percentage_30d_in_currency"]}}%</td>
+                <td>{{inverted[coin]["price_change_percentage_1y_in_currency"]}}%</td>
+                <td>{{inverted[coin]["market_cap"]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
