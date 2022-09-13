@@ -5,11 +5,29 @@
 {% endblock %}
 
 {% block main %}
+<table>
+    <thead>
+        <tr>
+            <th>Coin</th>
+            <th>Price</th>
+            <th>24h<th>
+            <th>30d<th>
+            <th>1y<th>
+            <th>Mkt Cap<th>
+        </tr>
 
-{% for id in coins_df %}
-
-{{coins_df[id]["name"]}} price is {{coins_df[id]["current_price"]}}
-
-{% endfor %}
-
+    </thead>
+    <tbody>
+        {% for coin in inverted %}
+        <tr>
+            <td>{{inverted[coin]["id"]}}</td>
+            <td>{{inverted[coin]["current_price"]}}</td>
+            <td>{{inverted[coin]["price_change_percentage_24h_in_currency"]}}</td>
+            <td>{{inverted[coin]["price_change_percentage_30d_in_currency"]}}</td>
+            <td>{{inverted[coin]["price_change_percentage_1y_in_currency"]}}</td>
+            <td>{{inverted[coin]["market_cap"]}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

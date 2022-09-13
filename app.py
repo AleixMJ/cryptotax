@@ -48,6 +48,6 @@ def markets():
     
     coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
     coins_df = pd.DataFrame(coins).head(10)
-    coins_df.set_index("id", inplace=True)
-    print(coins_df.loc["bitcoin"]["current_price"])
-    return render_template("markets.html", coins_df = coins_df)
+    inverted = coins_df.transpose()
+
+    return render_template("markets.html", inverted = inverted)
