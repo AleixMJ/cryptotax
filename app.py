@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, url_for
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
 from IPython import display
@@ -51,7 +51,7 @@ def markets():
 
     return render_template("markets.html", inverted = inverted)
 
-@app.route('/search')
+@app.route('/search', methods=["GET", "POST"])
 def search():
     
     historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days="max")
