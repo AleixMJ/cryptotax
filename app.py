@@ -59,9 +59,6 @@ def search():
     hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
     hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
     hist_df.set_index("Time", inplace=True)
-    print(hist_df.shape)
-    print(hist_df.head())
-    print(hist_df.info())
-    print(hist_df.describe())
-    print(mpf.plot(hist_df.tail(50)))
+    mpf.plot(hist_df.tail(100), savefig="chart.png")
+    
     return render_template("search.html")
