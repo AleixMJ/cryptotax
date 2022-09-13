@@ -53,7 +53,7 @@ def markets():
 
 @app.route('/search', methods=["GET", "POST"])
 def search():
-    
+       
     historical = cg.get_coin_ohlc_by_id(id="ethereum", vs_currency="usd", days="max")
     hist_df = pd.DataFrame(historical)
     hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
