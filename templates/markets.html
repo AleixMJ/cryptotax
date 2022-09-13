@@ -6,6 +6,10 @@
 
 {% block main %}
 
-{{ html }}
+{% for id in coins_df %}
+
+{{coins_df[id]["name"]}} price is {{coins_df[id]["current_price"]}}
+
+{% endfor %}
 
 {% endblock %}

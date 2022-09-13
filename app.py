@@ -45,13 +45,9 @@ def close_connection(exception):
 def markets():
     
     data = cg.get_price(ids = "bitcoin, ethereum", vs_currencies = "usd")
-    coins = []
-    Panda = pd.DataFrame(data)
-    for coin in data:
-                
-        coins.append({"name": coin, "usd": data[coin]["usd"]})
     
-    html = Panda.to_html()
-    text_file = open("markets.html", "w")
-    text_file.write(html)
-    return render_template("markets.html")
+    coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
+    coins_df = pd.DataFrame(coins).head(10)
+    coins_df.set_index("id", inplace=True)
+    print(coins_df.loc["bitcoin"]["current_price"])
+    return render_template("markets.html", coins_df = coins_df)
