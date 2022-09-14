@@ -6,7 +6,7 @@ from IPython import display
 import mplfinance as mpf
 from PIL import Image
 
-from functions import draw_chart, check_coin
+from functions import draw_chart
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -61,16 +61,20 @@ def search():
     if request.method == "POST":
 
         data = request.form.get("coin").lower()
-        print(data)
 
-        if data == None:
-            return "coin doesn't exist", redirect("/search")
-
-        duration = request.form.get("duration")
-        coin = request.form.get("coin").lower()
-        draw_chart(coin,duration)
+        for r in ids:
+            print(data)
+            print(r["id"])
+            if r["id"] == data:
+                print("match")
+                duration = request.form.get("duration")
+                coin = request.form.get("coin").lower()
+                draw_chart(coin,duration)
+                return render_template("search.html", coin=coin, duration=duration)                
+        else:
+            return "Coin does not exist"
+      
         
-        return render_template("search.html", coin=coin, duration=duration)
     else:
        
         img = Image.open("static/blank.png")
