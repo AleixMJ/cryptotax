@@ -5,6 +5,8 @@ import pandas as pd
 from IPython import display
 import mplfinance as mpf
 
+from functions import draw_chart
+
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -59,24 +61,11 @@ def search():
 
         duration = "max"
         coin = request.form.get("coin")
-        historical = cg.get_coin_ohlc_by_id(id=coin, vs_currency="usd", days=duration)
-        hist_df = pd.DataFrame(historical)
-        hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
-        hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
-        hist_df.set_index("Time", inplace=True)
-        mpf.plot(hist_df.tail(200), type="candle", style="charles", title= coin.capitalize() + " Price Chart", mav=(20,50), savefig="static/chart.png")
+        draw_chart(coin,duration)
         
-        return render_template("search.html")
+        return render_template("search.html", coin=coin, duration=duration)
     else:
-        duration = "max"
-        coin = "bitcoin"
-        historical = cg.get_coin_ohlc_by_id(id=coin, vs_currency="usd", days=duration)
-        hist_df = pd.DataFrame(historical)
-        hist_df.columns = ["Time", "Open", "High", "Low", "Close"]
-        hist_df["Time"] = pd.to_datetime(hist_df["Time"]/1000, unit="s")
-        hist_df.set_index("Time", inplace=True)
-        mpf.plot(hist_df.tail(200), type="candle", style="charles", title= coin.capitalize() + " Price Chart", mav=(20,50), savefig="static/chart.png")
-        
+       
         return render_template("search.html")
 
 
