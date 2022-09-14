@@ -1,11 +1,12 @@
 import sqlite3
-from flask import Flask, render_template, request, g, url_for
+from flask import Flask, render_template, request, g, url_for, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
 from IPython import display
 import mplfinance as mpf
+from PIL import Image
 
-from functions import draw_chart
+from functions import draw_chart, check_coin
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -59,13 +60,22 @@ def search():
 
     if request.method == "POST":
 
-        duration = "max"
-        coin = request.form.get("coin")
+        data = request.form.get("coin").lower()
+        print(data)
+
+        if data == None:
+            return "coin doesn't exist", redirect("/search")
+
+        duration = request.form.get("duration")
+        coin = request.form.get("coin").lower()
         draw_chart(coin,duration)
         
         return render_template("search.html", coin=coin, duration=duration)
     else:
        
+        img = Image.open("static/blank.png")
+        img = img.save("static/chart.png")
+
         return render_template("search.html")
 
 
