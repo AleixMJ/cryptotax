@@ -6,14 +6,12 @@ from IPython import display
 import mplfinance as mpf
 from PIL import Image
 
-from functions import draw_chart
+from functions import draw_chart, check_coin
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 cg = CoinGeckoAPI()
-
-ids = cg.get_coins_list(include_platform = "false")
 
 @app.route('/')
 def index():
@@ -62,16 +60,17 @@ def search():
 
         data = request.form.get("coin").lower()
 
-        for r in ids:
-            print(data)
-            print(r["id"])
-            if r["id"] == data:
-                print("match")
+        try:
+            result = check_coin(data)
+
+            if result == None:
+                return "Coin does not exist"
+            else:
                 duration = request.form.get("duration")
                 coin = request.form.get("coin").lower()
                 draw_chart(coin,duration)
                 return render_template("search.html", coin=coin, duration=duration)                
-        else:
+        except:
             return "Coin does not exist"
       
         
