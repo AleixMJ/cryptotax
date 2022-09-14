@@ -41,7 +41,49 @@
 </div>
 
 <div class="container text-center">
-    <img src="{{url_for('static', filename='chart.png')}}" />
+    <div class="row">
+        <div class="col">
+            <img src="{{url_for('static', filename='chart.png')}}" />
+        </div>
+        <div class="col justify-content-md-center">
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th scope="col" class="fw-bold">Bitcoin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td class="fw-bold">Current Price</td>
+                        <td>{{info["market_data"]["current_price"]["usd"]}}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">24 hours change</td>
+                        <td>5%</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">30 Days Change</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">1 year Change</td>
+                        <td>10%</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Homepage</td>
+                        <td><a href={{info["links"]["homepage"][0]}}>{{info["links"]["homepage"][0]}}</a></td>
+                        </tr>
+                                       
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" align="justify">
+            {{info["description"]["en"]}}
+        </div>
+    </div>
 </div>
 
 

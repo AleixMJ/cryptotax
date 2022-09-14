@@ -66,21 +66,21 @@ def search():
             if result == None:
                 return redirect("/coinlist")
             else:
+                info = cg.get_coin_by_id(request.form.get("coin").lower())
                 # Creates chart based on the duration and coin selected
                 duration = request.form.get("duration")
                 coin = request.form.get("coin").lower()
                 draw_chart(coin,duration)
-                return render_template("search.html", coin=coin, duration=duration)                
+                return render_template("search.html", coin=coin, duration=duration, info=info)                
         except:
-            return redirect("/coinlist")
-      
-        
+            return redirect("/coinlist") 
+
     else:
-       
+        info = {"description":{"en": ""},"links":{"homepage":[""]},"market_data":{"current_price":{"usd":""}}}
         img = Image.open("static/blank.png")
         img = img.save("static/chart.png")
 
-        return render_template("search.html")
+        return render_template("search.html", info=info)
 
 
 @app.route('/coinlist', methods=["GET"])
