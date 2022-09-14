@@ -64,14 +64,15 @@ def search():
             result = check_coin(data)
 
             if result == None:
-                return "Coin does not exist"
+                return redirect("/coinlist")
             else:
+                # Creates chart based on the duration and coin selected
                 duration = request.form.get("duration")
                 coin = request.form.get("coin").lower()
                 draw_chart(coin,duration)
                 return render_template("search.html", coin=coin, duration=duration)                
         except:
-            return "Coin does not exist"
+            return redirect("/coinlist")
       
         
     else:
@@ -80,6 +81,13 @@ def search():
         img = img.save("static/chart.png")
 
         return render_template("search.html")
+
+
+@app.route('/coinlist', methods=["GET"])
+def coinlist():
+
+    coins = cg.get_coins_list()
+    return render_template("coinlist.html", coins=coins)
 
 
 

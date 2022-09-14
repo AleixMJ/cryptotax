@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Available Coins
+{% endblock %}
+
+{% block main %}
+<div class="container text-center">
+<h1>Only these coins ara Available: </h1>
+    <div class="container">
+        {% for coin in coins %}
+        <div>{{coin["id"]}}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
