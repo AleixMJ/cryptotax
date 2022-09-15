@@ -76,11 +76,14 @@ def search():
             return redirect("/coinlist") 
 
     else:
-        info = {"description":{"en": ""},"links":{"homepage":[""]},"market_data":{"current_price":{"usd":""}}}
+        info = {"description":{"en": ""},"links":{"homepage":[""]},"market_data":{"current_price":{"usd":""},
+                "market_cap":{"usd":""},"price_change_percentage_24h":"","price_change_percentage_30d":"",
+                "price_change_percentage_1y":"","ath":{"usd":""}}}
         img = Image.open("static/blank.png")
         img = img.save("static/chart.png")
 
         return render_template("search.html", info=info)
+
 
 
 @app.route('/coinlist', methods=["GET"])
