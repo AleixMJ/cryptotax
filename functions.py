@@ -32,3 +32,7 @@ def check_coin(coin):
 def usd(value):
     """Format value as USD."""
     return f"${value:,.2f}"
+
+def percentage(value):
+    """Format value as %."""
+    return f"{value}%"
