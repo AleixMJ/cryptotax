@@ -59,16 +59,24 @@
                         <td>{{info["market_data"]["current_price"]["usd"]}}</td>
                     </tr>
                     <tr>
+                        <td class="fw-bold">All Time High</td>
+                        <td>{{info["market_data"]["ath"]["usd"]}}</td>
+                    </tr>
+                    <tr>
                         <td class="fw-bold">24 hours change</td>
-                        <td>5%</td>
+                        <td>{{info["market_data"]["price_change_percentage_24h"]}}%</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">30 Days Change</td>
-                        <td></td>
+                        <td>{{info["market_data"]["price_change_percentage_30d"]}}%</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">1 year Change</td>
-                        <td>10%</td>
+                        <td>{{info["market_data"]["price_change_percentage_1y"]}}%</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Marketcap</td>
+                        <td>{{info["market_data"]["market_cap"]["usd"]}}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">Homepage</td>
