@@ -6,12 +6,16 @@ from IPython import display
 import mplfinance as mpf
 from PIL import Image
 
-from functions import draw_chart, check_coin
+from functions import draw_chart, check_coin, usd
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+#API
 cg = CoinGeckoAPI()
+
+# Custom filter
+app.jinja_env.filters["usd"] = usd
 
 @app.route('/')
 def index():

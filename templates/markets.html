@@ -21,11 +21,11 @@
             {% for coin in inverted %}
             <tr>
                 <td >{{inverted[coin]["id"].capitalize()}} - {{inverted[coin]["symbol"].upper()}} </td>
-                <td>${{inverted[coin]["current_price"]}}</td>
+                <td>{{inverted[coin]["current_price"] | usd}}</td>
                 <td>{{inverted[coin]["price_change_percentage_24h_in_currency"]}}%</td>
                 <td>{{inverted[coin]["price_change_percentage_30d_in_currency"]}}%</td>
                 <td>{{inverted[coin]["price_change_percentage_1y_in_currency"]}}%</td>
-                <td>{{inverted[coin]["market_cap"]}}</td>
+                <td>{{inverted[coin]["market_cap"] | usd }}</td>
             </tr>
             {% endfor %}
         </tbody>
