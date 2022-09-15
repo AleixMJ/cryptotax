@@ -46,10 +46,11 @@
             <img src="{{url_for('static', filename='chart.png')}}" />
         </div>
         <div class="col justify-content-md-center">
-            <table class="table" >
+            <table class="table-borderless" >
                 <thead>
                     <tr>
-                        <th scope="col" class="fw-bold">Bitcoin</th>
+                        <th scope="col" class="fw-bold">Coin Symbol</th>
+                        <th scope="col" class="fw-bold">{{info["symbol"] | upper}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,15 +65,15 @@
                     </tr>
                     <tr>
                         <td class="fw-bold">24 hours change</td>
-                        <td>{{info["market_data"]["price_change_percentage_24h"]}}%</td>
+                        <td>{{info["market_data"]["price_change_percentage_24h"] | percentage}}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">30 Days Change</td>
-                        <td>{{info["market_data"]["price_change_percentage_30d"]}}%</td>
+                        <td>{{info["market_data"]["price_change_percentage_30d"] | percentage}}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">1 year Change</td>
-                        <td>{{info["market_data"]["price_change_percentage_1y"]}}%</td>
+                        <td>{{info["market_data"]["price_change_percentage_1y"] | percentage}}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">Marketcap</td>

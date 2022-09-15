@@ -35,4 +35,14 @@ def usd(value):
 
 def percentage(value):
     """Format value as %."""
-    return f"{value}%"
+    if value == "":
+        return ""
+    else:
+        return f"{value}%"
+
+def uppercase(value):
+    """Format value as %."""
+    if value == "":
+        return ""
+    else:
+        return f"{value.upper()}"

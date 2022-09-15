@@ -6,7 +6,7 @@ from IPython import display
 import mplfinance as mpf
 from PIL import Image
 
-from functions import draw_chart, check_coin, percentage, usd
+from functions import draw_chart, check_coin, percentage, uppercase, usd
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -17,6 +17,7 @@ cg = CoinGeckoAPI()
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 app.jinja_env.filters["percentage"] = percentage
+app.jinja_env.filters["upper"] = uppercase
 
 @app.route('/')
 def index():
@@ -81,7 +82,7 @@ def search():
             return redirect("/coinlist") 
 
     else:
-        info = {"description":{"en": ""},"links":{"homepage":[""]},"market_data":{"current_price":{"usd":""},
+        info = {"description":{"en": ""}, "symbol":"","links":{"homepage":[""]},"market_data":{"current_price":{"usd":""},
                 "market_cap":{"usd":""},"price_change_percentage_24h":"","price_change_percentage_30d":"",
                 "price_change_percentage_1y":"","ath":{"usd":""}}}
         img = Image.open("static/blank.png")
