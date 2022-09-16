@@ -19,6 +19,7 @@ app.jinja_env.filters["usd"] = usd
 app.jinja_env.filters["percentage"] = percentage
 app.jinja_env.filters["upper"] = uppercase
 
+
 @app.route('/')
 def index():
 
@@ -82,9 +83,9 @@ def search():
             return redirect("/coinlist") 
 
     else:
-        info = {"description":{"en": ""}, "symbol":"","links":{"homepage":[""]},"market_data":{"current_price":{"usd":""},
-                "market_cap":{"usd":""},"price_change_percentage_24h":"","price_change_percentage_30d":"",
-                "price_change_percentage_1y":"","ath":{"usd":""}}}
+        info = {"description":{"en": ""}, "symbol":"","links":{"homepage":[""]},"market_data":{"current_price":{"usd":None},
+                "market_cap":{"usd":None},"price_change_percentage_24h":"","price_change_percentage_30d":"",
+                "price_change_percentage_1y":"","ath":{"usd":None}}}
         img = Image.open("static/blank.png")
         img = img.save("static/chart.png")
 

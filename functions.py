@@ -31,6 +31,8 @@ def check_coin(coin):
 
 def usd(value):
     """Format value as USD."""
+    if value == None:
+        return ""
     return f"${value:,.2f}"
 
 def percentage(value):

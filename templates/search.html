@@ -49,39 +49,39 @@
             <table class="table-borderless" >
                 <thead>
                     <tr>
-                        <th scope="col" class="fw-bold">Coin Symbol</th>
-                        <th scope="col" class="fw-bold">{{info["symbol"] | upper}}</th>
+                        <th scope="col" class="fw-bold text-start">Coin Symbol</th>
+                        <th scope="col" class="fw-bold text-end">{{info["symbol"] | upper}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     
                     <tr>
-                        <td class="fw-bold">Current Price</td>
-                        <td>{{info["market_data"]["current_price"]["usd"]}}</td>
+                        <td class="fw-bold text-start">Current Price:</td>
+                        <td class="text-end">{{info["market_data"]["current_price"]["usd"] | usd}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">All Time High</td>
-                        <td>{{info["market_data"]["ath"]["usd"]}}</td>
+                        <td class="fw-bold text-start">All Time High:</td>
+                        <td class="text-end">{{info["market_data"]["ath"]["usd"] | usd}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">24 hours change</td>
-                        <td>{{info["market_data"]["price_change_percentage_24h"] | percentage}}</td>
+                        <td class="fw-bold text-start">24 hours change:</td>
+                        <td class="text-end">{{info["market_data"]["price_change_percentage_24h"] | percentage}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">30 Days Change</td>
-                        <td>{{info["market_data"]["price_change_percentage_30d"] | percentage}}</td>
+                        <td class="fw-bold text-start">30 Days Change:</td>
+                        <td class="text-end">{{info["market_data"]["price_change_percentage_30d"] | percentage}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">1 year Change</td>
-                        <td>{{info["market_data"]["price_change_percentage_1y"] | percentage}}</td>
+                        <td class="fw-bold text-start">1 year Change:</td>
+                        <td class="text-end">{{info["market_data"]["price_change_percentage_1y"] | percentage}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Marketcap</td>
-                        <td>{{info["market_data"]["market_cap"]["usd"]}}</td>
+                        <td class="fw-bold text-start">Marketcap:</td>
+                        <td class="text-end">{{info["market_data"]["market_cap"]["usd"] | usd}}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Homepage</td>
-                        <td><a href={{info["links"]["homepage"][0]}}>{{info["links"]["homepage"][0]}}</a></td>
+                        <td class="fw-bold text-start">Homepage:</td>
+                        <td class="text-end"><a href={{info["links"]["homepage"][0]}}>{{info["links"]["homepage"][0]}}</a></td>
                         </tr>
                                        
                 </tbody>
