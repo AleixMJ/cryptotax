@@ -30,21 +30,36 @@ def check_coin(coin):
         return None
 
 def usd(value):
-    """Format value as USD."""
+    #Format value as USD.
     if value == None:
         return ""
     return f"${value:,.2f}"
 
 def percentage(value):
-    """Format value as %."""
+    #Format value as %
     if value == "":
         return ""
     else:
         return f"{value}%"
 
 def uppercase(value):
-    """Format value as %."""
+    #Formats to uppercase
     if value == "":
         return ""
     else:
         return f"{value.upper()}"
+
+
+def get_db():
+    #Opens a database
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect("cryptotax.db")
+    return db
+
+def query_db(query, args=(), one=False):
+    #Queries a database
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
