@@ -123,6 +123,7 @@ def register():
             return ("Passwords don't match", 400)
         
         hash = generate_password_hash("password")
+        print(hash)
 
         check = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
         if check is not None:
@@ -131,6 +132,7 @@ def register():
         #Add user to the database
         db = get_db()
         db.execute("INSERT INTO users (username, hash) VALUES (?,?)", username, hash)
+        return redirect("index.html")
 
     else:
         return render_template("register.html")
