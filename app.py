@@ -136,7 +136,26 @@ def register():
     else:
         return render_template("register.html")
 
+@app.route("/login", method=["GET", "POST"])
+def login():
+    #Log user out
+    session.clear()
 
+    if request.method == "POST":
+        
+
+        return redirect("/")
+
+    else:
+        return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    #Log user out
+
+    session.clear()
+
+    return redirect("/")
 
 # No caching at all for API endpoints.
 @app.after_request
