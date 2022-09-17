@@ -33,7 +33,6 @@ app.jinja_env.filters["upper"] = uppercase
 @login_required
 def index():
 
-
     username = session["user_id"][1]
 
     return render_template("index.html", username=username)
