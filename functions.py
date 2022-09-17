@@ -1,6 +1,7 @@
 from lib2to3.pgen2.token import AT
+from functools import wraps
 import sqlite3
-from flask import Flask, render_template, request, g, url_for
+from flask import Flask, render_template, request, g, session, url_for, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
 from IPython import display
@@ -63,3 +64,15 @@ def query_db(query, args=(), one=False):
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
+
+def make_dicts(cursor, row):
+    return dict((cursor.description[idx][0], value)
+                for idx, value in enumerate(row))
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function

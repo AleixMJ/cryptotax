@@ -1,3 +1,4 @@
+from crypt import methods
 import sqlite3
 from flask import Flask, render_template, request, g, session, redirect
 from pycoingecko import CoinGeckoAPI
@@ -9,14 +10,15 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db
+from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required
 
 app = Flask(__name__)
-
+app.secret_key ="testin_sessions_672123"
 #Session setup
-SESSION_TYPE = 'redis'
+SESSION_TYPE = 'filesystem'
 app.config["SESSION_PERMANENT"] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config.from_object(__name__)
 Session(app)
 
 #API
@@ -28,13 +30,11 @@ app.jinja_env.filters["percentage"] = percentage
 app.jinja_env.filters["upper"] = uppercase
 
 @app.route('/')
+@login_required
 def index():
 
-    user = query_db('select * from users where id = ?',[1], one=True)
-    if user is None:
-        print('No such user')
-    else:
-        username = user[1]
+
+    username = session["user_id"][1]
 
     return render_template("index.html", username=username)
 
@@ -121,7 +121,7 @@ def register():
         if request.form.get("confirmation") != request.form.get("password"):
             return ("Passwords don't match", 400)
         
-        hash = generate_password_hash("password")
+        hash = generate_password_hash(request.form.get("password"))
 
         check = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
         if check is not None:
@@ -136,13 +136,20 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route("/login", method=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     #Log user out
     session.clear()
 
     if request.method == "POST":
         
+        user = query_db("SELECT * FROM users WHERE username = ?", [request.form.get("username")], one=False)
+
+        if len(user) != 1 or not check_password_hash(user[0][2], request.form.get("password")):
+            return "Invalid username and/or password "
+
+        session["user_id"] = user[0]
+        print(session["user_id"])
 
         return redirect("/")
 
@@ -156,6 +163,7 @@ def logout():
     session.clear()
 
     return redirect("/")
+
 
 # No caching at all for API endpoints.
 @app.after_request
