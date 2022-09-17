@@ -31,7 +31,6 @@ app.jinja_env.filters["upper"] = uppercase
 def index():
 
     user = query_db('select * from users where id = ?',[1], one=True)
-    
     if user is None:
         print('No such user')
     else:
@@ -123,7 +122,6 @@ def register():
             return ("Passwords don't match", 400)
         
         hash = generate_password_hash("password")
-        print(hash)
 
         check = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
         if check is not None:
@@ -131,8 +129,9 @@ def register():
 
         #Add user to the database
         db = get_db()
-        db.execute("INSERT INTO users (username, hash) VALUES (?,?)", username, hash)
-        return redirect("index.html")
+        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
+        db.commit()
+        return redirect("/")
 
     else:
         return render_template("register.html")
