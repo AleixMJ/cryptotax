@@ -97,6 +97,16 @@ def coinlist():
     coins = cg.get_coins_list()
     return render_template("coinlist.html", coins=coins)
 
+@app.route('/transactions')
+@login_required
+def transactions():
+    
+    #Displays a table with Cryptocurrency market data
+    coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
+    coins_df = pd.DataFrame(coins).head(100).round(2)
+    inverted = coins_df.transpose()
+
+    return render_template("transactions.html", inverted = inverted)
 
 
 @app.route('/register', methods=["GET", "POST"])
