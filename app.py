@@ -103,10 +103,11 @@ def transactions():
     
     if request.method == "POST":
 
-        coin_name = request.form.get("coin_name")
+        coin_name = request.form.get("coin_name").lower()
         number_coins = float(request.form.get("number_coins"))
         transaction_size = float(request.form.get("transaction_size"))
-        purchase_day = request.form.get("purchase_day")    
+        purchase_day = request.form.get("purchase_day")
+        currency = "usd"  
 
         if not coin_name:
             return ("Missing coin name", 400)
@@ -121,24 +122,19 @@ def transactions():
             return ("Missing date of transaction", 400)
 
         price_coin = transaction_size / number_coins
-        print(price_coin)
-        print(purchase_day)
         try:
-            result = check_coin(coin_name.lower())
-
+            result = check_coin(coin_name)
             if result == None:
-                return redirect("/coinlist")
-            else:
-                info = cg.get_coin_by_id(coin_name.lower())
-                db = get_db()
-                db.execute("INSER INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"], info["id"], info["symbol"], number_coins, transaction_size, price_coin, "usd", purchase_day))
-                db.commit()
-
-                return render_template("transactions.html")                
+                return redirect("/coinlist")        
         except:
             # If coin cannot be found it redirects the user to a page that shows all the coins that exist
             return redirect("/coinlist") 
-
+        
+        info = cg.get_coin_by_id(coin_name)
+        db = get_db()
+        db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
+        db.commit()
+        return render_template("transactions.html")
 
     else:
         #Displays a table with Cryptocurrency market data
