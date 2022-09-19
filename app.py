@@ -131,18 +131,25 @@ def transactions():
             return redirect("/coinlist") 
         
         info = cg.get_coin_by_id(coin_name)
+        print(session["user_id"][0])
+        print(info["id"])
+        print(info["symbol"])
         db = get_db()
-        db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
+        db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
         db.commit()
         return render_template("transactions.html")
 
     else:
-        #Displays a table with Cryptocurrency market data
-        coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
-        coins_df = pd.DataFrame(coins).head(100).round(2)
-        inverted = coins_df.transpose()
-
-        return render_template("transactions.html", inverted = inverted)
+        #Displays a table with all transactions
+        db = get_db()
+        cur = db.cursor()
+        print(session["user_id"][0])
+        user_id = 5
+        print(cur)
+        cur.execute("SELECT * FROM history WHERE user_id =?", (user_id))
+        transactions = cur.fetchall()
+        print(transactions)
+        return render_template("transactions.html", transactions=transactions)
 
 
 @app.route('/register', methods=["GET", "POST"])
