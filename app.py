@@ -97,16 +97,56 @@ def coinlist():
     coins = cg.get_coins_list()
     return render_template("coinlist.html", coins=coins)
 
-@app.route('/transactions')
+@app.route('/transactions', methods=["GET", "POST"])
 @login_required
 def transactions():
     
-    #Displays a table with Cryptocurrency market data
-    coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
-    coins_df = pd.DataFrame(coins).head(100).round(2)
-    inverted = coins_df.transpose()
+    if request.method == "POST":
 
-    return render_template("transactions.html", inverted = inverted)
+        coin_name = request.form.get("coin_name")
+        number_coins = float(request.form.get("number_coins"))
+        transaction_size = float(request.form.get("transaction_size"))
+        purchase_day = request.form.get("purchase_day")    
+
+        if not coin_name:
+            return ("Missing coin name", 400)
+
+        if not number_coins:
+            return ("Missing number coins", 400)
+
+        if not transaction_size:
+            return ("Missing total price", 400)
+
+        if not purchase_day:
+            return ("Missing date of transaction", 400)
+
+        price_coin = transaction_size / number_coins
+        print(price_coin)
+        print(purchase_day)
+        try:
+            result = check_coin(coin_name.lower())
+
+            if result == None:
+                return redirect("/coinlist")
+            else:
+                info = cg.get_coin_by_id(coin_name.lower())
+                db = get_db()
+                db.execute("INSER INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"], info["id"], info["symbol"], number_coins, transaction_size, price_coin, "usd", purchase_day))
+                db.commit()
+
+                return render_template("transactions.html")                
+        except:
+            # If coin cannot be found it redirects the user to a page that shows all the coins that exist
+            return redirect("/coinlist") 
+
+
+    else:
+        #Displays a table with Cryptocurrency market data
+        coins = cg.get_coins_markets(vs_currency="usd",price_change_percentage="24h,30d,1y")
+        coins_df = pd.DataFrame(coins).head(100).round(2)
+        inverted = coins_df.transpose()
+
+        return render_template("transactions.html", inverted = inverted)
 
 
 @app.route('/register', methods=["GET", "POST"])
