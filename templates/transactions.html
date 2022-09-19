@@ -32,19 +32,21 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Coin</th>
-                <th scope="col">Price</th>
-                <th scope="col">24h</th>
-                <th scope="col">30d</th>
-                <th scope="col">1y</th>
-                <th scope="col">Mkt Cap</th>
+                <th scope="col">Coin name</th>
+                <th scope="col">amount</th>
+                <th scope="col">average price</th>
+                <th scope="col">Transaction Size</th>
+                <th scope="col">Date</th>                
             </tr>
         </thead>
         <tbody>
             {% for row in transactions %}
             <tr>
-                <td >{{row[0]}} </td>
-
+                <td >{{row[5]}} </td>
+                <td >{{row[2]}} </td>
+                <td >{{row[4]}} </td>
+                <td >{{row[3]}} </td>
+                <td >{{row[7]}} </td>
             </tr>
             {% endfor %}
         </tbody>

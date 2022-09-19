@@ -137,18 +137,19 @@ def transactions():
         db = get_db()
         db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
         db.commit()
-        return render_template("transactions.html")
+        return redirect("/transactions")
 
     else:
         #Displays a table with all transactions
         db = get_db()
         cur = db.cursor()
         print(session["user_id"][0])
-        user_id = 5
+        user_id = session["user_id"][0]
         print(cur)
-        cur.execute("SELECT * FROM history WHERE user_id =?", (user_id))
+        cur.execute("SELECT * FROM history WHERE user_id =?", (user_id,))
         transactions = cur.fetchall()
         print(transactions)
+
         return render_template("transactions.html", transactions=transactions)
 
 
