@@ -8,5 +8,34 @@
 
 Hello, {{username}}
 
+<div class="container">
+    <h4>Portfolio</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Coin name</th>
+                <th scope="col">Symbol</th>
+                <th scope="col">amount</th>
+                <th scope="col">average price</th>
+                <th scope="col">Current Value</th>
+                <th scope="col">Total Cost</th>   
+                <th scope="col">Profit</th>             
+            </tr>
+        </thead>
+        <tbody>
+            {% for coin in portfolio %}
+            <tr>
+                <td >{{ coin["name"] }} </td>
+                <td >{{ coin["symbol"] }} </td>
+                <td >{{ coin["amount"] }} </td>
+                <td >{{ coin["average_price"] }}</td>
+                <td >{{ coin["current_value"] }} </td>
+                <td >{{ coin["total_cost] }}</td>
+                <td >{{ coin["profit"] }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

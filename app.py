@@ -22,6 +22,8 @@ Session(app)
 #API
 cg = CoinGeckoAPI()
 
+
+currency = "usd"
 # Custom filters
 app.jinja_env.filters["usd"] = usd
 app.jinja_env.filters["percentage"] = percentage
@@ -33,9 +35,22 @@ def index():
 
     username = session["user_id"][1]
 
-
-
-    return render_template("index.html", username=username)
+    db = get_db()
+    cur = db.cursor()
+    user_id = session["user_id"][0]
+    cur.execute("SELECT * FROM portfolio WHERE user_id =?", (user_id,))
+    data = cur.fetchall()
+    portfolio = []
+    
+    for row in data:
+        average_price = row[4] / row[3]
+        coin_data = cg.get_coin_by_id(row[1])
+        current_value = coin_data["market_data"]["current_price"]["usd"] * row[3]
+        profit = row[4] - current_value
+        portfolio.append({"name": row[1], "symbol": row[2],"amount":row[3],"average_price": average_price,
+                         "current_value": current_value, "total_cost": row[4], "profit": profit})
+    print(portfolio)
+    return render_template("index.html", username=username, portfolio=portfolio)
 
 
 @app.teardown_appcontext
