@@ -16,7 +16,8 @@ Hello, {{username}}
                 <th scope="col">Coin name</th>
                 <th scope="col">Symbol</th>
                 <th scope="col">amount</th>
-                <th scope="col">average price</th>
+                <th scope="col">current coin price</th>
+                <th scope="col">coin price paid</th>
                 <th scope="col">Current Value</th>
                 <th scope="col">Total Cost</th>   
                 <th scope="col">Profit</th>             
@@ -25,16 +26,31 @@ Hello, {{username}}
         <tbody>
             {% for coin in portfolio %}
             <tr>
-                <td >{{ coin["name"] }} </td>
-                <td >{{ coin["symbol"] }} </td>
+                <td >{{ coin["name"].capitalize() }} </td>
+                <td >{{ coin["symbol"].upper() }} </td>
                 <td >{{ coin["amount"] }} </td>
-                <td >{{ coin["average_price"] }}</td>
-                <td >{{ coin["current_value"] }} </td>
-                <td >{{ coin["total_cost] }}</td>
-                <td >{{ coin["profit"] }} </td>
+                <td >{{ coin["coin_price"] }} </td>
+                <td >{{ coin["average_price_paid"] | usd }}</td>
+                <td >{{ coin["current_value"] | usd }} </td>
+                <td >{{ coin["total_cost"] | usd }} </td>
+                <td >{{ coin["profit"] | usd }} </td>
             </tr>
             {% endfor %}
         </tbody>
+        <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Total Value</td>
+                <td class="border-0 text-end">10</td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Total Cost</td>
+                <td class="border-0 w-bold text-end">10</td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">Total Profit</td>
+                <td class="border-0 w-bold text-end"> 10</td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 

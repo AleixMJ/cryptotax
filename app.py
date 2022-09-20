@@ -45,10 +45,12 @@ def index():
     for row in data:
         average_price = row[4] / row[3]
         coin_data = cg.get_coin_by_id(row[1])
-        current_value = coin_data["market_data"]["current_price"]["usd"] * row[3]
-        profit = row[4] - current_value
-        portfolio.append({"name": row[1], "symbol": row[2],"amount":row[3],"average_price": average_price,
-                         "current_value": current_value, "total_cost": row[4], "profit": profit})
+        coin_price = round(coin_data["market_data"]["current_price"]["usd"], 2)
+        current_value =  round(coin_price* row[3], 2)
+        total_cost = round(row[4],2)
+        profit = round(total_cost - current_value, 2)
+        portfolio.append({"name": row[1], "symbol": row[2],"amount":row[3],"average_price_paid": average_price,
+                         "current_value": current_value, "total_cost": total_cost, "profit": profit, "coin_price": coin_price })
     print(portfolio)
     return render_template("index.html", username=username, portfolio=portfolio)
 
