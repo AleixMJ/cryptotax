@@ -41,18 +41,26 @@ def index():
     cur.execute("SELECT * FROM portfolio WHERE user_id =?", (user_id,))
     data = cur.fetchall()
     portfolio = []
+    global_value = 0
+    global_cost = 0
+    global_profit = 0
     
     for row in data:
         average_price = row[4] / row[3]
         coin_data = cg.get_coin_by_id(row[1])
         coin_price = round(coin_data["market_data"]["current_price"]["usd"], 2)
         current_value =  round(coin_price* row[3], 2)
-        total_cost = round(row[4],2)
-        profit = round(total_cost - current_value, 2)
+        total_cost = round(row[4], 2)
+        profit = round(current_value - total_cost, 2)
         portfolio.append({"name": row[1], "symbol": row[2],"amount":row[3],"average_price_paid": average_price,
                          "current_value": current_value, "total_cost": total_cost, "profit": profit, "coin_price": coin_price })
+        global_value =+ current_value
+        global_cost =+ total_cost
+        global_profit =+ profit
+
     print(portfolio)
-    return render_template("index.html", username=username, portfolio=portfolio)
+    return render_template("index.html", username=username, portfolio=portfolio, global_value=global_value, 
+                            global_cost=global_cost, global_profit=global_profit)
 
 
 @app.teardown_appcontext

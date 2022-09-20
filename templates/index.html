@@ -29,26 +29,27 @@ Hello, {{username}}
                 <td >{{ coin["name"].capitalize() }} </td>
                 <td >{{ coin["symbol"].upper() }} </td>
                 <td >{{ coin["amount"] }} </td>
-                <td >{{ coin["coin_price"] }} </td>
+                <td >{{ coin["coin_price"] | usd}} </td>
                 <td >{{ coin["average_price_paid"] | usd }}</td>
                 <td >{{ coin["current_value"] | usd }} </td>
                 <td >{{ coin["total_cost"] | usd }} </td>
                 <td >{{ coin["profit"] | usd }} </td>
             </tr>
+
             {% endfor %}
-        </tbody>
+            
         <tfoot>
             <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">Total Value</td>
-                <td class="border-0 text-end">10</td>
+                <td class="border-0 fw-bold text-end" colspan="7">Total Value: </td>
+                <td class="border-0 text-end">{{global_value | usd}}</td>
             </tr>
             <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">Total Cost</td>
-                <td class="border-0 w-bold text-end">10</td>
+                <td class="border-0 fw-bold text-end" colspan="7">Total Cost: </td>
+                <td class="border-0 w-bold text-end">{{global_cost | usd}}</td>
             </tr>
             <tr>
-                <td class="border-0 fw-bold text-end" colspan="4">Total Profit</td>
-                <td class="border-0 w-bold text-end"> 10</td>
+                <td class="border-0 fw-bold text-end" colspan="7">Total Profit: </td>
+                <td class="border-0 w-bold text-end"> {{global_profit | usd}}</td>
             </tr>
         </tfoot>
     </table>
