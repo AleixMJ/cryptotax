@@ -1,9 +1,7 @@
-from crypt import methods
 import sqlite3
 from flask import Flask, render_template, request, g, session, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
-from IPython import display
 import mplfinance as mpf
 from PIL import Image
 from flask_session import Session
@@ -34,6 +32,8 @@ app.jinja_env.filters["upper"] = uppercase
 def index():
 
     username = session["user_id"][1]
+
+
 
     return render_template("index.html", username=username)
 
@@ -93,7 +93,7 @@ def search():
 @app.route('/coinlist', methods=["GET"])
 def coinlist():
 
-    #Shaw all the available coins in the Coingecko API
+    #Show all the available coins in the Coingecko API
     coins = cg.get_coins_list()
     return render_template("coinlist.html", coins=coins)
 
@@ -109,6 +109,7 @@ def transactions():
         purchase_day = request.form.get("purchase_day")
         currency = "usd"  
 
+        #Verify the data was provided correctly
         if not coin_name:
             return ("Missing coin name", 400)
 
@@ -130,25 +131,33 @@ def transactions():
             # If coin cannot be found it redirects the user to a page that shows all the coins that exist
             return redirect("/coinlist") 
         
+        #Add data to history table
         info = cg.get_coin_by_id(coin_name)
-        print(session["user_id"][0])
-        print(info["id"])
-        print(info["symbol"])
         db = get_db()
         db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
         db.commit()
+
+        #Add data to portfolio table
+        check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)        
+        if check is not None:
+            number_coins = number_coins + check[3]
+            total_cost = transaction_size + check[4]
+            db.execute("UPDATE portfolio SET coins = ? WHERE user_id = ? AND symbol = ?", (number_coins, session["user_id"][0], info["symbol"]))         
+            db.execute("UPDATE portfolio SET total_cost = ? WHERE user_id = ? AND symbol = ?", (total_cost, session["user_id"][0], info["symbol"]))
+            db.commit()
+            return redirect("/transactions")
+        else:
+            db.execute("INSERT INTO portfolio (user_id, coin_name, symbol, coins, total_cost) VALUES (?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins,transaction_size))
+            db.commit()
         return redirect("/transactions")
 
     else:
         #Displays a table with all transactions
         db = get_db()
         cur = db.cursor()
-        print(session["user_id"][0])
         user_id = session["user_id"][0]
-        print(cur)
         cur.execute("SELECT * FROM history WHERE user_id =?", (user_id,))
         transactions = cur.fetchall()
-        print(transactions)
 
         return render_template("transactions.html", transactions=transactions)
 

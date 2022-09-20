@@ -4,9 +4,8 @@ import sqlite3
 from flask import Flask, render_template, request, g, session, url_for, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
-from IPython import display
 import mplfinance as mpf
-import requests
+
 
 cg = CoinGeckoAPI()
 
