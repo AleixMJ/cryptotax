@@ -159,6 +159,8 @@ def transactions():
         #Check that the coins sold do not exceed the coins available in portfolio
         check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)
         if number_coins < 0:
+            if check is None:
+                return error("not enough balance")
             if abs(number_coins) > check[3]:
                 return error("not enough balance")
 
