@@ -148,7 +148,7 @@ def transactions():
         if not purchase_day:
             return error("Missing date of transaction")
 
-        price_coin = transaction_size / number_coins
+        price_coin = transaction_size / abs(number_coins)
         try:
             result = check_coin(coin_name)
             if result == None:
@@ -213,19 +213,38 @@ def tax():
         allowance = request.form.get("allowance")
         start = datetime.strptime(request.form.get("tax_year_start"),  "%Y-%m-%d").date()      
         end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()  
-
-        print(session["user_id"][0])
-        db = query_db("SELECT * FROM history WHERE user_id = ? AND number_coins < 0 ", 
-                                [session["user_id"][0]], one=False)
+        
+        db = query_db("SELECT * FROM history WHERE user_id = ?", [session["user_id"][0]], one=False)
         
         transactions = []
+        tax = []
 
         for row in db:
             date = datetime.strptime(row[7],  "%Y-%m-%d").date()
             transactions.append({"name": row[5], "amount":row[2],"date": date, "proceeds": row[3]})
 
+        # Calculate allowable cost based on the defined dates transactions
+        for row in transactions:
+             if row["date"] > start and row["date"] < end:
+                total_cost = 0
+                total_coins = 0
+                for tx in transactions:
+                    if tx["date"] < row["date"]:
+                        print("tx")
+                        total_coins += tx["amount"]
+                        if tx["amount"] > 0:
+                            total_cost += tx["proceeds"]
+                        else:
+                            total_cost -= tx["proceeds"]
+                average_price = total_cost / total_coins
+                print(average_price)
+                print(total_cost)
+                print(total_coins)
+                allowable_cost = average_price * row["amount"]
+                profit = row["proceeds"] - allowable_cost
+                tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], "allowable_cost": allowable_cost, "proceeds": row["proceeds", "profit": profit]})
 
-        print(transactions)
+        print(tax)
 
         return render_template("tax.html", transactions=transactions)
     
@@ -261,7 +280,7 @@ def register():
 
         #Add user to the database
         db = get_db()
-        db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?)", (username, hash, currency))
+        db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?, ?)", (username, hash, currency))
         db.commit()
         return redirect("/")
 
