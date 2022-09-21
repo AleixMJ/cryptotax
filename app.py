@@ -230,7 +230,7 @@ def register():
 
         #Add user to the database
         db = get_db()
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", (username, hash))
+        db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?)", (username, hash, currency))
         db.commit()
         return redirect("/")
 
