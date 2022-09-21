@@ -156,6 +156,9 @@ def transactions():
             # If coin cannot be found it redirects the user to a page that shows all the coins that exist
             return redirect("/coinlist") 
         
+        
+
+
         #Add data to history table
         info = cg.get_coin_by_id(coin_name)
         db = get_db()
@@ -163,8 +166,14 @@ def transactions():
         db.commit()
 
         #Add data to portfolio table
-        check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)        
+        check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)
         if check is not None:
+
+            #Check that the coins sold do not exceed the coins available in portfolio
+            if number_coins < 0:
+       
+                if abs(number_coins) > check[3]:
+                    return "not enough balance"
             number_coins = number_coins + check[3]
             total_cost = transaction_size + check[4]
             db.execute("UPDATE portfolio SET coins = ? WHERE user_id = ? AND symbol = ?", (number_coins, session["user_id"][0], info["symbol"]))         
@@ -172,6 +181,11 @@ def transactions():
             db.commit()
             return redirect("/transactions")
         else:
+            #Check that the coins sold do not exceed the coins available in portfolio
+            if number_coins < 0:
+       
+                    return "not enough balance"
+
             db.execute("INSERT INTO portfolio (user_id, coin_name, symbol, coins, total_cost) VALUES (?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins,transaction_size))
             db.commit()
         return redirect("/transactions")

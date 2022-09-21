@@ -9,12 +9,13 @@
 
 <div class="container text-center">
     <h4>Add new transaction</h4>
+    <p>*If you want to sell a coin just choose a negative number of coins</p>
     <form action="/transactions" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="coin_name" name="coin_name" placeholder="Coin name" type="text" required>
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="number_coins" name="number_coins" placeholder="Number of coins" type="number" required>
+            <input class="form-control mx-auto w-auto" id="number_coins" name="number_coins" placeholder="Number of coins" type="number" required step="any">
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" id="transaction_size" name="transaction_size" placeholder="Transaction size in usd" type="number" required>
