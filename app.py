@@ -212,7 +212,10 @@ def tax():
         rate = request.form.get("rate")
         allowance = request.form.get("allowance")
         start = datetime.strptime(request.form.get("tax_year_start"),  "%Y-%m-%d").date()      
-        end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()  
+        end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()
+
+        if start > end:
+            return error("Tax year start date cannot happen after the tax year end date")
         
         db = query_db("SELECT * FROM history WHERE user_id = ?", [session["user_id"][0]], one=False)
         
@@ -234,19 +237,19 @@ def tax():
                         total_coins += tx["amount"]
                         if tx["amount"] > 0:
                             total_cost += tx["proceeds"]
-                        else:
-                            total_cost -= tx["proceeds"]
-                average_price = total_cost / total_coins
+
+                average_price = round(total_cost / total_coins, 2)
                 print(average_price)
                 print(total_cost)
                 print(total_coins)
-                allowable_cost = average_price * row["amount"]
-                profit = row["proceeds"] - allowable_cost
-                tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], "allowable_cost": allowable_cost, "proceeds": row["proceeds", "profit": profit]})
+                print(row["name"])
+                allowable_cost = round(average_price * abs(row["amount"]), 2)
+                profit = round(row["proceeds"] - allowable_cost, 2)
+                tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], "allowable_cost": allowable_cost, "proceeds": row["proceeds"], "profit": profit})
 
         print(tax)
 
-        return render_template("tax.html", transactions=transactions)
+        return render_template("tax.html", tax=tax)
     
     else:
         return render_template("tax.html")

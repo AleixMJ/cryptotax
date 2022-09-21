@@ -44,14 +44,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in transactions %}
+            {% for row in tax %}
             <tr>
                 <td > {{row["name"].capitalize()}} </td>
                 <td > {{row["amount"]}} </td>
                 <td > {{row["date"]}} </td>
-                <td > a </td>
+                <td > {{row["allowable_cost"] | usd}} </td>
                 <td > {{row["proceeds"] | usd}} </td>
-                <td > a</td>
+                <td > {{row["profit"] | usd}}</td>
             </tr>
             {% endfor %}
         </tbody>
