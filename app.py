@@ -200,6 +200,16 @@ def transactions():
 
         return render_template("transactions.html", transactions=transactions)
 
+@app.route('/tax', methods=["GET", "POST"])
+@login_required
+def tax():
+
+    if request.method == "POST":
+
+        return render_template("tax.html")
+    
+    else:
+        return render_template("tax.html")
 
 @app.route('/register', methods=["GET", "POST"])
 def register():

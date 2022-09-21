@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transaction History
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container text-center">
+    <h4>Add new transaction</h4>
+    <p>*If you want to sell a coin just choose a negative number of coins</p>
+    <form action="/transactions" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="coin_name" name="coin_name" placeholder="Coin name" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="number_coins" name="number_coins" placeholder="Number of coins" type="number" required step="any">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="transaction_size" name="transaction_size" placeholder="Transaction size in usd" type="number" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="purchase_day" name="purchase_day" placeholder="Date yyyy/mm/dd" type="date" required>
+        </div>
+        <button class="btn btn-primary mx-auto w-auto" type="submit">Add transaction</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <h4>Taxes</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Coin name</th>
+                <th scope="col">amount sold</th>
+                <th scope="col">Allowable Cost</th>
+                <th scope="col">Proceeds</th>
+                <th scope="col">Profit</th>                
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in transactions %}
+            <tr>
+                <td > a </td>
+                <td > a </td>
+                <td > a </td>
+                <td > a </td>
+                <td > a</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="7">Total Profit: </td>
+                <td class="border-0 text-end"> a </td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="7">Taxes to pay: </td>
+                <td class="border-0 w-bold text-end"> a </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}
