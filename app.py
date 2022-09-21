@@ -215,11 +215,18 @@ def tax():
         end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()  
 
         print(session["user_id"][0])
-        transactions = query_db("SELECT * FROM history WHERE user_id = ? AND number_coins < 0 ", 
+        db = query_db("SELECT * FROM history WHERE user_id = ? AND number_coins < 0 ", 
                                 [session["user_id"][0]], one=False)
+        
+        transactions = []
+
+        for row in db:
+            date = datetime.strptime(row[7],  "%Y-%m-%d").date()
+            transactions.append({"name": row[5], "amount":row[2],"date": date, "proceeds": row[3]})
+
+
         print(transactions)
-        print(type(transactions[0][7]))
-        print(transactions[0][7])
+
         return render_template("tax.html", transactions=transactions)
     
     else:
