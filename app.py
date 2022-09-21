@@ -6,6 +6,7 @@ import mplfinance as mpf
 from PIL import Image
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
 
 from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error
@@ -168,7 +169,8 @@ def transactions():
         #Add data to history table
         info = cg.get_coin_by_id(coin_name)
         db = get_db()
-        db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
+        db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                    (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
         db.commit()
 
         #Add data to portfolio table        
@@ -186,7 +188,8 @@ def transactions():
        
                     return error("not enough balance")
 
-            db.execute("INSERT INTO portfolio (user_id, coin_name, symbol, coins, total_cost) VALUES (?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins,transaction_size))
+            db.execute("INSERT INTO portfolio (user_id, coin_name, symbol, coins, total_cost) VALUES (?, ?, ?, ?, ?)", 
+                        (session["user_id"][0], info["id"], info["symbol"], number_coins,transaction_size))
             db.commit()
         return redirect("/transactions")
 
@@ -208,14 +211,16 @@ def tax():
 
         rate = request.form.get("rate")
         allowance = request.form.get("allowance")
-        start = request.form.get("tax_year_start")
-        end = request.form.get("tax_year_end") 
+        start = datetime.strptime(request.form.get("tax_year_start"),  "%Y-%m-%d").date()      
+        end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()  
 
         print(session["user_id"][0])
-        transactions = query_db("SELECT * FROM history WHERE user_id = ?", [session["user_id"][0]], one=False)
+        transactions = query_db("SELECT * FROM history WHERE user_id = ? AND number_coins < 0 ", 
+                                [session["user_id"][0]], one=False)
         print(transactions)
-
-        return render_template("tax.html")
+        print(type(transactions[0][7]))
+        print(transactions[0][7])
+        return render_template("tax.html", transactions=transactions)
     
     else:
         return render_template("tax.html")
