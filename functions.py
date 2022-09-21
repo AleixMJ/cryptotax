@@ -75,3 +75,7 @@ def login_required(f):
             return redirect('/login')
         return f(*args, **kwargs)
     return decorated_function
+
+def error(message):
+
+    return render_template("error.html", message=message)

@@ -8,7 +8,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required
+from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error
 
 app = Flask(__name__)
 app.secret_key ="testin_sessions_672123"
@@ -136,16 +136,16 @@ def transactions():
 
         #Verify the data was provided correctly
         if not coin_name:
-            return ("Missing coin name", 400)
+            return error("Missing coin name")
 
         if not number_coins:
-            return ("Missing number coins", 400)
+            return error("Missing number coins")
 
         if not transaction_size:
-            return ("Missing total price", 400)
+            return error("Missing total price")
 
         if not purchase_day:
-            return ("Missing date of transaction", 400)
+            return error("Missing date of transaction")
 
         price_coin = transaction_size / number_coins
         try:
@@ -156,7 +156,11 @@ def transactions():
             # If coin cannot be found it redirects the user to a page that shows all the coins that exist
             return redirect("/coinlist") 
         
-        
+        #Check that the coins sold do not exceed the coins available in portfolio
+        check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)
+        if number_coins < 0:
+            if abs(number_coins) > check[3]:
+                return error("not enough balance")
 
 
         #Add data to history table
@@ -165,15 +169,9 @@ def transactions():
         db.execute("INSERT INTO history (user_id, coin_name, symbol, number_coins, transaction_size, price_coin, currency, purchase_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins, transaction_size, price_coin, currency, purchase_day))
         db.commit()
 
-        #Add data to portfolio table
-        check = query_db("SELECT * FROM portfolio WHERE coin_name = ? AND user_id = ?", (coin_name, session["user_id"][0]), one=True)
+        #Add data to portfolio table        
         if check is not None:
-
-            #Check that the coins sold do not exceed the coins available in portfolio
-            if number_coins < 0:
-       
-                if abs(number_coins) > check[3]:
-                    return "not enough balance"
+        
             number_coins = number_coins + check[3]
             total_cost = transaction_size + check[4]
             db.execute("UPDATE portfolio SET coins = ? WHERE user_id = ? AND symbol = ?", (number_coins, session["user_id"][0], info["symbol"]))         
@@ -184,7 +182,7 @@ def transactions():
             #Check that the coins sold do not exceed the coins available in portfolio
             if number_coins < 0:
        
-                    return "not enough balance"
+                    return error("not enough balance")
 
             db.execute("INSERT INTO portfolio (user_id, coin_name, symbol, coins, total_cost) VALUES (?, ?, ?, ?, ?)", (session["user_id"][0], info["id"], info["symbol"], number_coins,transaction_size))
             db.commit()
@@ -211,22 +209,22 @@ def register():
         
 
         if not username:
-            return ("Missing username", 400)
+            return error("Missing username")
 
         if not request.form.get("password"):
-            return ("Missing password", 400)
+            return error("Missing password")
 
         if not request.form.get("confirmation"):
-            return ("Missing confirmation", 400)
+            return error("Missing confirmation")
 
         if request.form.get("confirmation") != request.form.get("password"):
-            return ("Passwords don't match", 400)
+            return error("Passwords don't match")
         
         hash = generate_password_hash(request.form.get("password"))
 
         check = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
         if check is not None:
-            return ("user already exist", 400)
+            return error("user already exist")
 
         #Add user to the database
         db = get_db()
@@ -247,7 +245,7 @@ def login():
         user = query_db("SELECT * FROM users WHERE username = ?", [request.form.get("username")], one=False)
 
         if len(user) != 1 or not check_password_hash(user[0][2], request.form.get("password")):
-            return "Invalid username and/or password "
+            return error("Invalid username and/or password")
 
         session["user_id"] = user[0]
         print(session["user_id"])
