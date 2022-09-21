@@ -58,7 +58,7 @@ def index():
         global_cost =+ total_cost
         global_profit =+ profit
 
-    print(portfolio)
+    
     return render_template("index.html", username=username, portfolio=portfolio, global_value=global_value, 
                             global_cost=global_cost, global_profit=global_profit)
 
@@ -206,6 +206,15 @@ def tax():
 
     if request.method == "POST":
 
+        rate = request.form.get("rate")
+        allowance = request.form.get("allowance")
+        start = request.form.get("tax_year_start")
+        end = request.form.get("tax_year_end") 
+
+        print(session["user_id"][0])
+        transactions = query_db("SELECT * FROM history WHERE user_id = ?", [session["user_id"][0]], one=False)
+        print(transactions)
+
         return render_template("tax.html")
     
     else:
@@ -260,8 +269,7 @@ def login():
             return error("Invalid username and/or password")
 
         session["user_id"] = user[0]
-        print(session["user_id"])
-
+       
         return redirect("/")
 
     else:

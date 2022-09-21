@@ -8,22 +8,23 @@
 
 
 <div class="container text-center">
-    <h4>Add new transaction</h4>
-    <p>*If you want to sell a coin just choose a negative number of coins</p>
-    <form action="/transactions" method="post">
+    <h4>Add tax information</h4>
+    <form action="/tax" method="post">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="coin_name" name="coin_name" placeholder="Coin name" type="text" required>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="rate" name="rate" placeholder="Tax rate" type="number" required min="0" max="100">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="number_coins" name="number_coins" placeholder="Number of coins" type="number" required step="any">
+            <input class="form-control mx-auto w-auto" id="allowances" name="allowances" placeholder=" Yearly tax allowances" type="number" required step="any">
         </div>
+        <div class="mb-3 fw-bold"> Tax year start date</div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="transaction_size" name="transaction_size" placeholder="Transaction size in usd" type="number" required>
+            <input class="form-control mx-auto w-auto" id="tax_year_start" name="tax_year_start" placeholder="Tax year start" type="date" required>
         </div>
+        <div class="mb-3 fw-bold"> Tax year end date</div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="purchase_day" name="purchase_day" placeholder="Date yyyy/mm/dd" type="date" required>
+            <input class="form-control mx-auto w-auto" id="tax_year_end" name="tax_year_end" placeholder="Tax year end" type="date" required>
         </div>
-        <button class="btn btn-primary mx-auto w-auto" type="submit">Add transaction</button>
+        <button class="btn btn-primary mx-auto w-auto" type="submit">Check my taxes</button>
         </div>
     </form>
 </div>
@@ -52,6 +53,10 @@
             {% endfor %}
         </tbody>
         <tfoot>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="7">Tax Year: </td>
+                <td class="border-0 text-end"> a </td>
+            </tr>
             <tr>
                 <td class="border-0 fw-bold text-end" colspan="7">Total Profit: </td>
                 <td class="border-0 text-end"> a </td>
