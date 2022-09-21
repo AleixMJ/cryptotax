@@ -209,8 +209,8 @@ def tax():
 
     if request.method == "POST":
 
-        rate = request.form.get("rate")
-        allowance = request.form.get("allowance")
+        rate = int(request.form.get("rate"))
+        allowance = int(request.form.get("allowances"))
         start = datetime.strptime(request.form.get("tax_year_start"),  "%Y-%m-%d").date()      
         end = datetime.strptime(request.form.get("tax_year_end"),  "%Y-%m-%d").date()
 
@@ -221,7 +221,8 @@ def tax():
         
         transactions = []
         tax = []
-
+        total_profit = 0
+ 
         for row in db:
             date = datetime.strptime(row[7],  "%Y-%m-%d").date()
             transactions.append({"name": row[5], "amount":row[2],"date": date, "proceeds": row[3]})
@@ -233,23 +234,23 @@ def tax():
                 total_coins = 0
                 for tx in transactions:
                     if tx["date"] < row["date"]:
-                        print("tx")
                         total_coins += tx["amount"]
                         if tx["amount"] > 0:
                             total_cost += tx["proceeds"]
 
                 average_price = round(total_cost / total_coins, 2)
-                print(average_price)
-                print(total_cost)
-                print(total_coins)
-                print(row["name"])
                 allowable_cost = round(average_price * abs(row["amount"]), 2)
                 profit = round(row["proceeds"] - allowable_cost, 2)
-                tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], "allowable_cost": allowable_cost, "proceeds": row["proceeds"], "profit": profit})
+                tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], 
+                            "allowable_cost": allowable_cost, "proceeds": row["proceeds"], "profit": profit})
+                total_profit += profit
 
-        print(tax)
-
-        return render_template("tax.html", tax=tax)
+        
+        taxes_to_pay = round((total_profit * (rate / 100)) - allowance, 2)
+        if taxes_to_pay < 0:
+            taxes_to_pay = 0
+        return render_template("tax.html", tax=tax, end=end, start=start, total_profit=total_profit, 
+                                taxes_to_pay=taxes_to_pay)
     
     else:
         return render_template("tax.html")
