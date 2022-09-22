@@ -1,2 +1,8 @@
 Flask
 pycoingecko
+sqlite
+pandas
+mplfinance
+werkzeug.security
+datetime
+functools
