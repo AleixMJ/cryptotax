@@ -9,7 +9,7 @@ The apps consist of the following folders/documents:
 *__templates__:
 This is where all the html websites are (basic Flask requirement).
 
-*__atatic__:
+*__static__:
 This is where the chart images are saved and the CSS file.
 
 *__app.py__:
