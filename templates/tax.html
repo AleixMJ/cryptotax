@@ -56,18 +56,24 @@
             {% endfor %}
         </tbody>
         <tfoot>
+            {% if start %}
             <tr>
                 <td class="border-0 fw-bold text-end" colspan="5">Tax Year: </td>
                 <td class="border-0 text-end"> {{start}} to {{end}} </td>
             </tr>
+            {% endif %}
+            {% if total_profit %}
             <tr>
                 <td class="border-0 fw-bold text-end" colspan="5">Total Profit: </td>
-                <td class="border-0 text-end"> {{total_profit}} </td>
+                <td class="border-0 text-end"> {{total_profit | usd}} </td>
             </tr>
+            {% endif %}
+            {% if taxes_to_pay %}
             <tr>
                 <td class="border-0 fw-bold text-end" colspan="5">Taxes to pay: </td>
-                <td class="border-0 w-bold text-end"> {{taxes_to_pay}} </td>
+                <td class="border-0 w-bold text-end"> {{taxes_to_pay | usd}} </td>
             </tr>
+            {% endif %}
         </tfoot>
     </table>
 </div>

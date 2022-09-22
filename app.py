@@ -105,14 +105,8 @@ def search():
             return redirect("/coinlist") 
 
     else:
-        #If the site is vist by get it only displays the forms that need to be filled to search
-        info = {"description":{"en": ""}, "symbol":"","links":{"homepage":[""]},"market_data":{"current_price":{"usd":None},
-                "market_cap":{"usd":None},"price_change_percentage_24h":"","price_change_percentage_30d":"",
-                "price_change_percentage_1y":"","ath":{"usd":None}}}
-        img = Image.open("static/blank.png")
-        img = img.save("static/chart.png")
 
-        return render_template("search.html", info=info)
+        return render_template("search.html")
 
 
 
