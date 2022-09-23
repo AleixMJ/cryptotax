@@ -31,7 +31,8 @@ app.config["MYSQL_DATABASE_USER"] = os.environ.get("MYSQL_DATABASE_USER")
 app.config["MYSQL_DATABASE_PASSWORD"] = os.environ.get("MYSQL_DATABASE_PASSWORD")
 app.config["MYSQL_DATABASE_DB"] = os.environ.get("MYSQL_DATABASE_DB")
 
-mysql = MySQL(app)
+mysql = MySQL()
+mysql.init_app(app)
 
 #API
 cg = CoinGeckoAPI()
@@ -292,6 +293,11 @@ def register():
         db = get_db()
         db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?, ?)", (username, hash, currency))
         db.commit()
+
+        cursor = mysql.get_db().cursor()
+        cursor.execute("INSERT INTO users (username, hash, currency) VALUES (%s, %s, %s)",(username, hash, currency))
+        mysql.connect.commit()
+        cursor.close()
         return redirect("/")
 
     else:
