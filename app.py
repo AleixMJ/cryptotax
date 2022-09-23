@@ -17,7 +17,7 @@ app.secret_key ="testin_sessions_672123"
 
 
 #MYSQL Configuration
-DBsetup = yaml.load(open("db.yaml"))
+
 app.config["MYSQL_DATABASE_HOST"] = DBsetup["MYSQL_DATABASE_HOST"]
 app.config["MYSQL_DATABASE_USER"] = DBsetup["MYSQL_DATABASE_USER"]
 app.config["MYSQL_DATABASE_PASSWORD"] = DBsetup["MYSQL_DATABASE_PASSWORD"]
