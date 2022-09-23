@@ -7,12 +7,23 @@ from PIL import Image
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
+import yaml
 
 
 from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error
 
 app = Flask(__name__)
 app.secret_key ="testin_sessions_672123"
+
+
+#MYSQL Configuration
+DBsetup = yaml.load(open("db.yaml"))
+app.config["MYSQL_DATABASE_HOST"] = DBsetup["MYSQL_DATABASE_HOST"]
+app.config["MYSQL_DATABASE_USER"] = DBsetup["MYSQL_DATABASE_USER"]
+app.config["MYSQL_DATABASE_PASSWORD"] = DBsetup["MYSQL_DATABASE_PASSWORD"]
+app.config["MYSQL_DATABASE_DB"] = DBsetup["MYSQL_DATABASE_DB"]
+
+
 #Session setup
 SESSION_TYPE = 'filesystem'
 app.config["SESSION_PERMANENT"] = False
