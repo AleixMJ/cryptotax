@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from flask import Flask, render_template, request, g, session, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
@@ -7,6 +8,7 @@ from PIL import Image
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
+from flaskext.mysql import MySQL
 
 
 
@@ -16,22 +18,20 @@ app = Flask(__name__)
 app.secret_key ="testin_sessions_672123"
 
 
-#MYSQL Configuration
-
-app.config["MYSQL_DATABASE_HOST"] = DBsetup["MYSQL_DATABASE_HOST"]
-app.config["MYSQL_DATABASE_USER"] = DBsetup["MYSQL_DATABASE_USER"]
-app.config["MYSQL_DATABASE_PASSWORD"] = DBsetup["MYSQL_DATABASE_PASSWORD"]
-app.config["MYSQL_DATABASE_DB"] = DBsetup["MYSQL_DATABASE_DB"]
-
-mysql = MySQL(app)
-
-
 #Session setup
 SESSION_TYPE = 'filesystem'
 app.config["SESSION_PERMANENT"] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config.from_object(__name__)
 Session(app)
+
+#MySQL configuration
+app.config["MYSQL_DATABASE_HOST"] = os.environ.get("MYSQL_DATABASE_HOST")
+app.config["MYSQL_DATABASE_USER"] = os.environ.get("MYSQL_DATABASE_USER")
+app.config["MYSQL_DATABASE_PASSWORD"] = os.environ.get("MYSQL_DATABASE_PASSWORD")
+app.config["MYSQL_DATABASE_DB"] = os.environ.get("MYSQL_DATABASE_DB")
+
+mysql = MySQL(app)
 
 #API
 cg = CoinGeckoAPI()
