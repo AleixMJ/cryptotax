@@ -23,8 +23,6 @@ Session(app)
 #API
 cg = CoinGeckoAPI()
 
-#testing AWS-Database branch
-
 currency = "usd"
 # Custom filters
 app.jinja_env.filters["usd"] = usd
