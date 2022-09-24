@@ -23,15 +23,27 @@ db = SQLAlchemy(app)
 
 class users(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
-    username = db.Column(db.String(100))
+    username = db.Column(db.String(100), unique=True)
     hash = db.Column(db.String(200))
     currency = db.Column(db.String(20))
+    transactions = db.relationship("history", backref="transaction")
 
     def __init__(self, username, hash, currency):
         self.username = username
         self.hash = hash
         self.currency = currency
 
+
+class history(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    symbol = db.Column(db.String(50), nullable=False)
+    number_coins = db.Column(db.Integer, nullable=False)
+    transaction_size = db.Column(db.Integer, nullable=False)
+    price_coin = db.Column(db.Integer, nullable=False)
+    coin_name = db.Column(db.String(100), nullable=False)
+    currency = db.Column(db.String(30), nullable=False)
+    purchase_day = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
 
 db.create_all()
@@ -295,14 +307,14 @@ def register():
         
         hash = generate_password_hash(request.form.get("password"))
 
-        check2 = users2.query.filter_by(username=username).first()
+        check2 = users.query.filter_by(username=username).first()
         if check2 is not None:
             return error("user already exist")
 
         #Add user to the database
 
-        dba.session.add(users2(username, hash, currency))
-        dba.session.commit()
+        db.session.add(users(username, hash, currency))
+        db.session.commit()
 
         return redirect("/")
 
