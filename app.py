@@ -69,11 +69,11 @@ app.jinja_env.filters["upper"] = uppercase
 @login_required
 def index():
 
-    username = session["user_id"][1]
+    username = session["user_id"]["username"]
 
     db = get_db()
     cur = db.cursor()
-    user_id = session["user_id"][0]
+    user_id = session["user_id"]["id"]
     cur.execute("SELECT * FROM portfolio WHERE user_id =?", (user_id,))
     data = cur.fetchall()
     portfolio = []
@@ -329,13 +329,11 @@ def login():
     if request.method == "POST":
                 
         user = users.query.filter_by(username=request.form.get("username")).first()
-        print(user)
 
-        if user == None or not check_password_hash(user[0][2], request.form.get("password")):
+        if user == None or not check_password_hash(user.hash, request.form.get("password")):
             return error("Invalid username and/or password")
 
-        session["user_id"] = user[0]
-       
+        session["user_id"] = {"id": user.id, "username": user.username,"hash":user.hash, "currency":user.currency}      
         return redirect("/")
 
     else:
