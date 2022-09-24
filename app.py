@@ -19,19 +19,22 @@ app.secret_key ="testin_sessions_672123"
 #Add Database
 app.config["SQLALCHEMY_DATABASE_URI"] = 
 
-dba = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
-class users2(dba.Model):
-    id = dba.Column("id", dba.Integer, primary_key=True)
-    username = dba.Column(dba.String(100))
-    hash = dba.Column(dba.String(200))
-    currency = dba.Column(dba.String(20))
+class users(db.Model):
+    id = db.Column("id", db.Integer, primary_key=True)
+    username = db.Column(db.String(100))
+    hash = db.Column(db.String(200))
+    currency = db.Column(db.String(20))
 
     def __init__(self, username, hash, currency):
         self.username = username
         self.hash = hash
         self.currency = currency
 
+
+
+db.create_all()
 
 #Session setup
 SESSION_TYPE = 'filesystem'
@@ -292,15 +295,14 @@ def register():
         
         hash = generate_password_hash(request.form.get("password"))
 
-        check = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
-        if check is not None:
+        check2 = users2.query.filter_by(username=username).first()
+        if check2 is not None:
             return error("user already exist")
 
         #Add user to the database
-        db = get_db()
-        db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?, ?)", (username, hash, currency))
-        db.commit()
 
+        dba.session.add(users2(username, hash, currency))
+        dba.session.commit()
 
         return redirect("/")
 
@@ -345,5 +347,4 @@ def add_header(response):
     return response
 
 if __name__ == '__main__':
-    dba.create_all()
     app.run(debug=True)
