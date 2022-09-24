@@ -8,14 +8,29 @@ from PIL import Image
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from flaskext.mysql import MySQL
-
-
-
+import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
 from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error
+
 
 app = Flask(__name__)
 app.secret_key ="testin_sessions_672123"
+
+#Add Database
+app.config["SQLALCHEMY_DATABASE_URI"] = 
+
+dba = SQLAlchemy(app)
+
+class users2(dba.Model):
+    id = dba.Column("id", dba.Integer, primary_key=True)
+    username = dba.Column(dba.String(100))
+    hash = dba.Column(dba.String(200))
+    currency = dba.Column(dba.String(20))
+
+    def __init__(self, username, hash, currency):
+        self.username = username
+        self.hash = hash
+        self.currency = currency
 
 
 #Session setup
@@ -25,14 +40,6 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config.from_object(__name__)
 Session(app)
 
-#MySQL configuration
-app.config["MYSQL_DATABASE_HOST"] = os.environ.get("MYSQL_DATABASE_HOST")
-app.config["MYSQL_DATABASE_USER"] = os.environ.get("MYSQL_DATABASE_USER")
-app.config["MYSQL_DATABASE_PASSWORD"] = os.environ.get("MYSQL_DATABASE_PASSWORD")
-app.config["MYSQL_DATABASE_DB"] = os.environ.get("MYSQL_DATABASE_DB")
-
-mysql = MySQL()
-mysql.init_app(app)
 
 #API
 cg = CoinGeckoAPI()
@@ -294,10 +301,7 @@ def register():
         db.execute("INSERT INTO users (username, hash, currency) VALUES (?, ?, ?)", (username, hash, currency))
         db.commit()
 
-        cursor = mysql.get_db().cursor()
-        cursor.execute("INSERT INTO users (username, hash, currency) VALUES (%s, %s, %s)",(username, hash, currency))
-        mysql.connect.commit()
-        cursor.close()
+
         return redirect("/")
 
     else:
@@ -341,4 +345,5 @@ def add_header(response):
     return response
 
 if __name__ == '__main__':
+    dba.create_all()
     app.run(debug=True)
