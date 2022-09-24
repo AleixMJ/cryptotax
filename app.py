@@ -307,8 +307,8 @@ def register():
         
         hash = generate_password_hash(request.form.get("password"))
 
-        check2 = users.query.filter_by(username=username).first()
-        if check2 is not None:
+        check = users.query.filter_by(username=username).first()
+        if check is not None:
             return error("user already exist")
 
         #Add user to the database
@@ -327,10 +327,11 @@ def login():
     session.clear()
 
     if request.method == "POST":
-        
-        user = query_db("SELECT * FROM users WHERE username = ?", [request.form.get("username")], one=False)
+                
+        user = users.query.filter_by(username=request.form.get("username")).first()
+        print(user)
 
-        if len(user) != 1 or not check_password_hash(user[0][2], request.form.get("password")):
+        if user == None or not check_password_hash(user[0][2], request.form.get("password")):
             return error("Invalid username and/or password")
 
         session["user_id"] = user[0]
