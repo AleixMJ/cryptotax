@@ -43,11 +43,11 @@
         <tbody>
             {% for row in transactions %}
             <tr>
-                <td >{{row[5]}} </td>
-                <td >{{row[2]}} </td>
-                <td >{{row[4] | usd}} </td>
-                <td >{{row[3] | usd}} </td>
-                <td >{{row[7]}} </td>
+                <td >{{row.coin_name}} </td>
+                <td >{{row.number_coins}} </td>
+                <td >{{row.price_coin | usd}} </td>
+                <td >{{row.transaction_size | usd}} </td>
+                <td >{{row.purchase_day}} </td>
             </tr>
             {% endfor %}
         </tbody>
