@@ -227,8 +227,12 @@ def transactions():
 
         #Add data to portfolio table        
         if check is not None:
+            if number_coins < 0:
+                total_cost = check.total_cost + (check.total_cost * (number_coins / check.coins))
+            else:
+                total_cost = check.total_cost + transaction_size
+
             number_coins = number_coins + check.coins
-            total_cost = transaction_size + check.total_cost
             portfolio_coin = portfolio.query.filter_by(user_id=session["user_id"]["id"], coin_name=coin_name).first()
             portfolio_coin.coins = number_coins
             portfolio_coin.total_cost = total_cost
@@ -239,7 +243,6 @@ def transactions():
             if number_coins < 0:
                            return error("not enough balance")
 
-            print("*")
             transaction = portfolio(coin_name=info["id"], symbol=info["symbol"], coins=number_coins, total_cost=transaction_size, user_id=session["user_id"]["id"])
             db.session.add(transaction)
             db.session.commit()
