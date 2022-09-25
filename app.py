@@ -186,7 +186,7 @@ def transactions():
     if request.method == "POST":
 
         coin_name = request.form.get("coin_name").lower()
-        number_coins = int(request.form.get("number_coins"))
+        number_coins = float(request.form.get("number_coins"))
         transaction_size = float(request.form.get("transaction_size"))
         purchase_day = request.form.get("purchase_day")
         currency = "usd"  
