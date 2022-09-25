@@ -107,7 +107,6 @@ def index():
     
     for row in data:
         average_price = row.total_cost / row.coins
-        print(average_price)
         coin_data = cg.get_coin_by_id(row.coin_name)
         coin_price = round(coin_data["market_data"]["current_price"]["usd"], 2)
         current_value =  round(coin_price* row.coins, 2)
@@ -228,18 +227,19 @@ def transactions():
 
         #Add data to portfolio table        
         if check is not None:
-        
-            number_coins = number_coins + check[3]
-            total_cost = transaction_size + check[4]
-            db.execute("UPDATE portfolio SET coins = ? WHERE user_id = ? AND symbol = ?", (number_coins, session["user_id"][0], info["symbol"]))         
-            db.execute("UPDATE portfolio SET total_cost = ? WHERE user_id = ? AND symbol = ?", (total_cost, session["user_id"][0], info["symbol"]))
-            db.commit()
+            number_coins = number_coins + check.coins
+            total_cost = transaction_size + check.total_cost
+            portfolio_coin = portfolio.query.filter_by(user_id=session["user_id"]["id"], coin_name=coin_name).first()
+            portfolio_coin.coins = number_coins
+            portfolio_coin.total_cost = total_cost
+            db.session.commit()
             return redirect("/transactions")
         else:
             #Check that the coins sold do not exceed the coins available in portfolio
             if number_coins < 0:
-       
-                    return error("not enough balance")
+                           return error("not enough balance")
+
+            print("*")
             transaction = portfolio(coin_name=info["id"], symbol=info["symbol"], coins=number_coins, total_cost=transaction_size, user_id=session["user_id"]["id"])
             db.session.add(transaction)
             db.session.commit()
@@ -251,7 +251,6 @@ def transactions():
 
         user_id = session["user_id"]["id"]
         transactions = history.query.filter_by(user_id=user_id).all()
-        print(transactions)
 
         return render_template("transactions.html", transactions=transactions)
 
