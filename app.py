@@ -271,22 +271,26 @@ def tax():
         if start > end:
             return error("Tax year start date cannot happen after the tax year end date")
         
-        db = query_db("SELECT * FROM history WHERE user_id = ?", [session["user_id"][0]], one=False)
-        
+        user_taxes = history.query.filter_by(user_id = session["user_id"]["id"]).all()
+
         transactions = []
         tax = []
         total_profit = 0
  
-        for row in db:
-            date = datetime.strptime(row[7],  "%Y-%m-%d").date()
-            transactions.append({"name": row[5], "amount":row[2],"date": date, "proceeds": row[3]})
+        for row in user_taxes:
+            print(row.purchase_day)
+            print(type(row.purchase_day))
+            date = datetime.strptime(row.purchase_day,  "%Y-%m-%d").date()
+            print(type(date))
+            transactions.append({"name": row.coin_name, "amount":row.number_coins,"date": date, "proceeds": row.transaction_size})
 
         # Calculate allowable cost based on the defined dates transactions
         for row in transactions:
              if row["date"] > start and row["date"] < end:
-                total_cost = 0
-                total_coins = 0
+                total_cost = transactions[0]["proceeds"]
+                total_coins = transactions[0]["amount"]
                 for tx in transactions:
+                    print(total_coins)
                     if tx["date"] < row["date"]:
                         total_coins += tx["amount"]
                         if tx["amount"] > 0:
