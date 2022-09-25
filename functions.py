@@ -5,9 +5,14 @@ from flask import Flask, render_template, request, g, session, url_for, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
 import mplfinance as mpf
-
+from dotenv import load_dotenv
 
 cg = CoinGeckoAPI()
+
+
+def configure():
+    load_dotenv()
+
 
 def draw_chart(coin,duration):
 

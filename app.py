@@ -10,14 +10,17 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
-from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error
+from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error,configure
+from dotenv import load_dotenv
 
+
+configure()
 
 app = Flask(__name__)
-app.secret_key ="testin_sessions_672123"
+app.secret_key = os.getenv("SECRETKEY")
 
 #Add Database
-app.config["SQLALCHEMY_DATABASE_URI"] = 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 
 db = SQLAlchemy(app)
