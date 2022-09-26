@@ -296,8 +296,12 @@ def tax():
                         if tx["amount"] > 0:
                             total_cost += tx["proceeds"]
 
+                print(total_coins)
+                print(total_cost)
                 average_price = round(total_cost / total_coins, 2)
+                print(average_price)
                 allowable_cost = round(average_price * abs(row["amount"]), 2)
+                print(allowable_cost)
                 profit = round(row["proceeds"] - allowable_cost, 2)
                 tax.append({"name": row["name"], "amount":row["amount"],"date": row["date"], 
                             "allowable_cost": allowable_cost, "proceeds": row["proceeds"], "profit": profit})
