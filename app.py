@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
-from functions import draw_chart, check_coin, percentage, uppercase, usd, get_db, query_db, login_required, error,configure
+from functions import draw_chart, check_coin, percentage, uppercase, usd, login_required, error,configure
 from dotenv import load_dotenv
 
 
@@ -117,9 +117,9 @@ def index():
         profit = round(current_value - total_cost, 2)
         portfolio2.append({"name": row.coin_name, "symbol": row.symbol,"amount":row.coins,"average_price_paid": average_price,
                          "current_value": current_value, "total_cost": total_cost, "profit": profit, "coin_price": coin_price })
-        global_value =+ current_value
-        global_cost =+ total_cost
-        global_profit =+ profit
+        global_value += current_value
+        global_cost += total_cost
+        global_profit += profit
 
     
     return render_template("index.html", username=username, portfolio2=portfolio2, global_value=global_value, 
@@ -226,7 +226,6 @@ def transactions():
         #Add data to history table
         info = cg.get_coin_by_id(coin_name)
         transaction = history(coin_name=info["id"], symbol=info["symbol"], number_coins=number_coins, transaction_size=transaction_size, price_coin=price_coin, currency=currency, purchase_day=purchase_day, user_id=session["user_id"]["id"])
-        print(transaction.number_coins)
         db.session.add(transaction)
         db.session.commit()
 
@@ -283,10 +282,7 @@ def tax():
         total_profit = 0
  
         for row in user_taxes:
-            print(row.purchase_day)
-            print(type(row.purchase_day))
             date = datetime.strptime(row.purchase_day,  "%Y-%m-%d").date()
-            print(type(date))
             transactions.append({"name": row.coin_name, "amount":row.number_coins,"date": date, "proceeds": row.transaction_size})
 
         # Calculate allowable cost based on the defined dates transactions
