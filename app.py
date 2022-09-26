@@ -287,11 +287,10 @@ def tax():
 
         # Calculate allowable cost based on the defined dates transactions
         for row in transactions:
-             if row["date"] > start and row["date"] < end:
+             if row["date"] > start and row["date"] < end and row["amount"] < 0:
                 total_cost = transactions[0]["proceeds"]
                 total_coins = transactions[0]["amount"]
-                for tx in transactions:
-                    print(total_coins)
+                for tx in transactions:     
                     if tx["date"] < row["date"]:
                         total_coins += tx["amount"]
                         if tx["amount"] > 0:
