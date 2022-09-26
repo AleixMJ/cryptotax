@@ -42,9 +42,9 @@ class users(db.Model):
 class history(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     symbol = db.Column(db.String(50), nullable=False)
-    number_coins = db.Column(db.Integer, nullable=False)
-    transaction_size = db.Column(db.Integer, nullable=False)
-    price_coin = db.Column(db.Integer, nullable=False)
+    number_coins = db.Column(db.Float, nullable=False)
+    transaction_size = db.Column(db.Float, nullable=False)
+    price_coin = db.Column(db.Float, nullable=False)
     coin_name = db.Column(db.String(100), nullable=False)
     currency = db.Column(db.String(30), nullable=False)
     purchase_day = db.Column(db.String(50), nullable=False)
@@ -64,8 +64,8 @@ class portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     coin_name = db.Column(db.String(100), nullable=False)
     symbol = db.Column(db.String(50), nullable=False)
-    coins = db.Column(db.Integer, nullable=False)
-    total_cost = db.Column(db.Integer, nullable=False)  
+    coins = db.Column(db.Float, nullable=False)
+    total_cost = db.Column(db.Float, nullable=False)  
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def __init__(self, coin_name, symbol, coins, total_cost, user_id):
@@ -189,7 +189,8 @@ def transactions():
         number_coins = float(request.form.get("number_coins"))
         transaction_size = float(request.form.get("transaction_size"))
         purchase_day = request.form.get("purchase_day")
-        currency = "usd"  
+        currency = "usd"
+        print(number_coins)  
 
         #Verify the data was provided correctly
         if not coin_name:
@@ -225,6 +226,7 @@ def transactions():
         #Add data to history table
         info = cg.get_coin_by_id(coin_name)
         transaction = history(coin_name=info["id"], symbol=info["symbol"], number_coins=number_coins, transaction_size=transaction_size, price_coin=price_coin, currency=currency, purchase_day=purchase_day, user_id=session["user_id"]["id"])
+        print(transaction.number_coins)
         db.session.add(transaction)
         db.session.commit()
 
