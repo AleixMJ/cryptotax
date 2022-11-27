@@ -1,6 +1,5 @@
 from lib2to3.pgen2.token import AT
 from functools import wraps
-import sqlite3
 from flask import Flask, render_template, request, g, session, url_for, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd

@@ -1,17 +1,13 @@
-import sqlite3
 import os
 from flask import Flask, render_template, request, g, session, redirect
 from pycoingecko import CoinGeckoAPI
 import pandas as pd
 import mplfinance as mpf
-from PIL import Image
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
 from functions import draw_chart, check_coin, percentage, uppercase, usd, login_required, error,configure
-from dotenv import load_dotenv
 
 
 configure()
