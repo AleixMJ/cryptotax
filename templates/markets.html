@@ -11,6 +11,7 @@
         <thead>
             <tr>
                 <th scope="col">Coin</th>
+                <th scope="col">Symbol</th>
                 <th scope="col">Price</th>
                 <th scope="col">24h</th>
                 <th scope="col">30d</th>
@@ -21,7 +22,8 @@
         <tbody>
             {% for coin in inverted %}
             <tr>
-                <td >{{inverted[coin]["id"].capitalize()}} - {{inverted[coin]["symbol"].upper()}} </td>
+                <td >{{inverted[coin]["id"].capitalize()}} </td>
+                <td>{{inverted[coin]["symbol"].upper()}}</td>
                 <td>{{inverted[coin]["current_price"] | usd}}</td>
                 <td>{{inverted[coin]["price_change_percentage_24h_in_currency"] | percentage}}</td>
                 <td>{{inverted[coin]["price_change_percentage_30d_in_currency"] | percentage}}</td>

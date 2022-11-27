@@ -13,14 +13,26 @@ body {
 }
 
 
-@media screen and (max-width: 480px) {
-    .tableCurrentMarketDataMobile > thead > tr> th:nth-child(4), th:nth-child(5) {
+@media screen and (max-width: 780px) {
+    .tableCurrentMarketDataMobile > thead > tr> th:nth-child(2), th:nth-child(5) {
      display:none;
     }
    }
 
-@media screen and (max-width: 480px) {
-    .tableCurrentMarketDataMobile > tbody > tr> td:nth-child(4), td:nth-child(5) {
+@media screen and (max-width: 780px) {
+    .tableCurrentMarketDataMobile > tbody > tr> td:nth-child(2), td:nth-child(5) {
+     display:none;
+    }
+   }
+
+@media screen and (max-width: 510px) {
+    .tableCurrentMarketDataMobile > thead > tr> th:nth-child(2), th:nth-child(5), th:nth-child(6) {
+     display:none;
+    }
+   }
+
+@media screen and (max-width: 510px) {
+    .tableCurrentMarketDataMobile > tbody > tr> td:nth-child(2), td:nth-child(5), td:nth-child(6) {
      display:none;
     }
    }
